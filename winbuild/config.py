@@ -43,6 +43,11 @@ libs = {
         'filename': PILLOW_DEPENDS_DIR + 'lcms2-2.7.zip',
         'dir': 'lcms2-2.7',
     },
+    'ghostscript': {
+        'url': 'https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs926/ghostscript-9.26.tar.gz',  # noqa: E501
+        'filename': PILLOW_DEPENDS_DIR + 'ghostscript-9.26.tar.gz',
+        'dir': 'ghostscript-9.26',
+    },
     'tcl-8.5': {
         'url': SF_MIRROR+'/project/tcl/Tcl/8.5.19/tcl8519-src.zip',
         'filename': PILLOW_DEPENDS_DIR + 'tcl8519-src.zip',
@@ -66,9 +71,9 @@ libs = {
         'version': '8.6.9',
     },
     'webp': {
-        'url': 'http://downloads.webmproject.org/releases/webp/libwebp-1.0.1.tar.gz',
-        'filename': PILLOW_DEPENDS_DIR + 'libwebp-1.0.1.tar.gz',
-        'dir': 'libwebp-1.0.1',
+        'url': 'http://downloads.webmproject.org/releases/webp/libwebp-1.0.2.tar.gz',
+        'filename': PILLOW_DEPENDS_DIR + 'libwebp-1.0.2.tar.gz',
+        'dir': 'libwebp-1.0.2',
     },
     'openjpeg': {
         'url': SF_MIRROR+'/project/openjpeg/openjpeg/2.3.0/openjpeg-2.3.0.tar.gz',

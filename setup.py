@@ -111,7 +111,7 @@ def _find_library_dirs_ldconfig():
                                  stdout=subprocess.PIPE,
                                  env=env)
     except OSError:  # E.g. command not found
-        return None
+        return []
     [data, _] = p.communicate()
     if isinstance(data, bytes):
         data = data.decode()
@@ -177,12 +177,6 @@ def get_version():
         exec(compile(f.read(), version_file, 'exec'))
     return locals()['__version__']
 
-
-try:
-    import _tkinter
-except (ImportError, OSError):
-    # pypy emits an oserror
-    _tkinter = None
 
 NAME = 'Pillow'
 PILLOW_VERSION = get_version()

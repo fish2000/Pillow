@@ -296,6 +296,7 @@ class PngStream(ChunkStream):
         self.im_mode = None
         self.im_tile = None
         self.im_palette = None
+        self.im_custom_mimetype = None
 
         self.text_memory = 0
 
@@ -529,6 +530,7 @@ class PngStream(ChunkStream):
     # APNG chunks
     def chunk_acTL(self, pos, length):
         s = ImageFile._safe_read(self.fp, length)
+        self.im_custom_mimetype = 'image/apng'
         return s
 
     def chunk_fcTL(self, pos, length):
@@ -594,6 +596,7 @@ class PngImageFile(ImageFile.ImageFile):
         self.info = self.png.im_info
         self._text = None
         self.tile = self.png.im_tile
+        self.custom_mimetype = self.png.im_custom_mimetype
 
         if self.png.im_palette:
             rawmode, data = self.png.im_palette
@@ -677,6 +680,8 @@ class PngImageFile(ImageFile.ImageFile):
                 self.png.call(cid, pos, length)
             except UnicodeDecodeError:
                 break
+            except EOFError:
+                ImageFile._safe_read(self.fp, length)
         self._text = self.png.im_text
         self.png.close()
         self.png = None
@@ -908,4 +913,3 @@ Image.register_save(PngImageFile.format, _save)
 Image.register_extensions(PngImageFile.format, [".png", ".apng"])
 
 Image.register_mime(PngImageFile.format, "image/png")
-Image.register_mime(PngImageFile.format, "image/apng")
