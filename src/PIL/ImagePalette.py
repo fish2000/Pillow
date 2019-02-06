@@ -22,24 +22,22 @@ from . import ImageColor, GimpPaletteFile, GimpGradientFile, PaletteFile
 
 
 def split_abbreviations(s):
-    """ Split a string into a tuple of its unique constituents,
-        based on its internal capitalization -- to wit:
+    """
+    Split a string into a tuple of its unique constituents,
+    based on its internal capitalization.
 
-        >>> split_abbreviations('RGB')
-        ('R', 'G', 'B')
-        >>> split_abbreviations('CMYK')
-        ('C', 'M', 'Y', 'K')
-        >>> split_abbreviations('YCbCr')
-        ('Y', 'Cb', 'Cr')
-        >>> split_abbreviations('sRGB')
-        ('R', 'G', 'B')
-        >>> split_abbreviations('XYZZ')
-        ('X', 'Y', 'Z')
-        >>> split_abbreviations('I;16B')
-        ('I',)
-
-        If you still find this function inscrutable,
-        have a look here: https://gist.github.com/4027079
+    >>> split_abbreviations('RGB')
+    ('R', 'G', 'B')
+    >>> split_abbreviations('CMYK')
+    ('C', 'M', 'Y', 'K')
+    >>> split_abbreviations('YCbCr')
+    ('Y', 'Cb', 'Cr')
+    >>> split_abbreviations('sRGB')
+    ('R', 'G', 'B')
+    >>> split_abbreviations('XYZZ')
+    ('X', 'Y', 'Z')
+    >>> split_abbreviations('I;16B')
+    ('I',)
     """
     abbreviations = []
     current_token = ''
@@ -66,9 +64,6 @@ class ImagePalette(object):
 
     :param mode: The mode to use for the Palette. See:
         :ref:`concept-modes`. Defaults to "RGB"
-    :param channels: A tuple of channel labels to use for the Palette. If
-        this is not given or None, it will be derived from the mode string,
-        using the ``split_abbreviations(…)`` function. Defaults to None.
     :param palette: An optional palette. If given, it must be a bytearray,
         an array or a list of ints between 0-255 and of length ``size``
         times the number of colors in ``mode``. The list must be aligned
@@ -76,9 +71,13 @@ class ImagePalette(object):
         and B values.) Defaults to 0 through 255 per channel.
     :param size: An optional palette size. If given, it cannot be equal to
         or greater than 256. Defaults to 0.
+    :param channels: An optional tuple of channel labels to use for the
+        Palette. If this is not given or None, it will be derived from the
+        mode string, using the ``split_abbreviations(…)`` function.
+        Defaults to None.
     """
 
-    def __init__(self, mode="RGB", channels=None, palette=None, size=0):
+    def __init__(self, mode="RGB", palette=None, size=0, channels=None):
         self.mode = mode
         self.channels = channels or split_abbreviations(self.mode)
         self.rawmode = None  # if set, palette contains raw data
@@ -131,7 +130,9 @@ class ImagePalette(object):
     tostring = tobytes
 
     def getcolor(self, color):
-        """Given an rgb tuple, allocate palette entry.
+        """
+        Given a color tuple matching the palette mode, allocate
+        a new palette entry.
 
         .. warning:: This method is experimental.
         """
@@ -148,9 +149,8 @@ class ImagePalette(object):
                 if index >= 256:
                     raise ValueError("cannot allocate more than 256 colors")
                 self.colors[color] = index
-                self.palette[index] = color[0]
-                self.palette[index+256] = color[1]
-                self.palette[index+512] = color[2]
+                for channel_idx in range(len(self.channels)):
+                    self.palette[index + (channel_idx * 256)] = color[channel_idx]
                 self.dirty = 1
                 return index
         else:
@@ -169,7 +169,7 @@ class ImagePalette(object):
         fp.write("# Mode: %s\n" % self.mode)
         for i in range(256):
             fp.write("%d" % i)
-            for j in range(i*len(self.channels), (i+1) * len(self.channels)):
+            for j in range(i * len(self.channels), (i+1) * len(self.channels)):
                 try:
                     fp.write(" %d" % self.palette[j])
                 except IndexError:
@@ -184,7 +184,7 @@ class ImagePalette(object):
 def raw(rawmode, data):
     palette = ImagePalette()
     palette.rawmode = rawmode
-    palette.channels = split_abbreviations(rawmode)
+    palette.channels = rawmode and split_abbreviations(rawmode) or tuple()
     palette.palette = data
     palette.dirty = 1
     return palette

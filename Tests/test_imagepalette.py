@@ -105,6 +105,7 @@ class TestImagePalette(PillowTestCase):
 
         # Assert
         self.assertEqual(mode, "RGB;L")
+        self.assertEqual(ImagePalette.split_abbreviations(mode), ('R', 'G', 'B'))
 
     def test_rawmode_getdata(self):
         # Arrange
