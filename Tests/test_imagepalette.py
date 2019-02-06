@@ -117,6 +117,7 @@ class TestImagePalette(PillowTestCase):
         # Assert
         self.assertEqual(rawmode, "RGB")
         self.assertEqual(data_in, data_out)
+        self.assertEqual(palette.channels, ('R', 'G', 'B'))
 
     def test_2bit_palette(self):
         # issue #2258, 2 bit palettes are corrupted.
@@ -134,6 +135,15 @@ class TestImagePalette(PillowTestCase):
     def test_invalid_palette(self):
         self.assertRaises(IOError,
                           ImagePalette.load, "Tests/images/hopper.jpg")
+
+    def test_split_abbreviations(self):
+        self.assertEqual(ImagePalette.split_abbreviations('RGB'), ('R', 'G', 'B'))
+        self.assertEqual(ImagePalette.split_abbreviations('CMYK'), ('C', 'M', 'Y', 'K'))
+        self.assertEqual(ImagePalette.split_abbreviations('YCbCr'), ('Y', 'Cb', 'Cr'))
+        self.assertEqual(ImagePalette.split_abbreviations('sRGB'), ('R', 'G', 'B'))
+        self.assertEqual(ImagePalette.split_abbreviations('XYZZ'), ('X', 'Y', 'Z'))
+        self.assertEqual(ImagePalette.split_abbreviations('I;16L'), ('I',))
+
 
 
 if __name__ == '__main__':
