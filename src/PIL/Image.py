@@ -2690,7 +2690,7 @@ def open(fp, mode="r"):
                 # opening failures that are entirely expected.
                 # logger.debug("", exc_info=True)
                 continue
-            except Exception:
+            except BaseException:
                 if exclusive_fp:
                     fp.close()
                 raise

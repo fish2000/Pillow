@@ -1,4 +1,4 @@
-from helper import unittest, PillowTestCase
+from .helper import unittest, PillowTestCase
 
 from PIL import _util
 
@@ -30,7 +30,7 @@ class TestUtil(PillowTestCase):
         fp = "filename.ext"
 
         # Act
-        it_is = _util.isStringType(fp)
+        it_is = _util.isPath(fp)
 
         # Assert
         self.assertTrue(it_is)

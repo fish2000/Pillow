@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from helper import unittest, PillowTestCase, hopper
+=======
+from .helper import unittest, PillowTestCase, hopper
+>>>>>>> b384a8d28c0fde946cd44d0e764ce5bc72c45e1b
 
 
 class TestImageEntropy(PillowTestCase):

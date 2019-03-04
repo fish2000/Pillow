@@ -1,5 +1,5 @@
 from __future__ import print_function
-from helper import unittest, PillowTestCase, hopper
+from .helper import unittest, PillowTestCase, hopper
 from PIL import features
 from PIL._util import py3
 
@@ -205,7 +205,7 @@ class TestFileLibTiff(LibTiffTestCase):
         #     4: "long",
         #     5: "rational",
         #     12: "double",
-        # type: dummy value
+        # Type: dummy value
         values = {2: 'test',
                   3: 1,
                   4: 2**20,
