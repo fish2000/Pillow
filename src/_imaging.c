@@ -1196,14 +1196,8 @@ parse_histogram_extremap(ImagingObject* self, PyObject* extremap,
         case IMAGING_TYPE_UINT8:
             if (!PyArg_ParseTuple(extremap, "ii", &i0, &i1))
                 return NULL;
-<<<<<<< HEAD
-            /* FIXME: clip */
-            ep->u[0] = i0;
-            ep->u[1] = i1;
-=======
             ep->u[0] = CLIP8(i0);
             ep->u[1] = CLIP8(i1);
->>>>>>> b384a8d28c0fde946cd44d0e764ce5bc72c45e1b
             break;
         case IMAGING_TYPE_INT32:
             if (!PyArg_ParseTuple(extremap, "ii", &i0, &i1))
@@ -1234,21 +1228,12 @@ _histogram(ImagingObject* self, PyObject* args)
     int i;
     union hist_extrema extrema;
     union hist_extrema* ep;
-<<<<<<< HEAD
-
-    PyObject* extremap = NULL;
-    ImagingObject* maskp = NULL;
-    if (!PyArg_ParseTuple(args, "|OO!", &extremap, &Imaging_Type, &maskp))
-    return NULL;
-
-=======
 
     PyObject* extremap = NULL;
     ImagingObject* maskp = NULL;
     if (!PyArg_ParseTuple(args, "|OO!", &extremap, &Imaging_Type, &maskp))
         return NULL;
 
->>>>>>> b384a8d28c0fde946cd44d0e764ce5bc72c45e1b
     /* Using a var to avoid allocations. */
     ep = parse_histogram_extremap(self, extremap, &extrema);
     h = ImagingGetHistogram(self->image, (maskp) ? maskp->image : NULL, ep);
@@ -1289,11 +1274,7 @@ _entropy(ImagingObject* self, PyObject* args)
     PyObject* extremap = NULL;
     ImagingObject* maskp = NULL;
     if (!PyArg_ParseTuple(args, "|OO!", &extremap, &Imaging_Type, &maskp))
-<<<<<<< HEAD
-    return NULL;
-=======
         return NULL;
->>>>>>> b384a8d28c0fde946cd44d0e764ce5bc72c45e1b
 
     /* Using a local var to avoid allocations. */
     ep = parse_histogram_extremap(self, extremap, &extrema);
@@ -1316,13 +1297,9 @@ _entropy(ImagingObject* self, PyObject* args)
     fentropy = 0.0;
     for (idx = 0; idx < length; idx++) {
         p = (double)h->histogram[idx] / fsum;
-<<<<<<< HEAD
-        fentropy += p != 0.0 ? (p * log(p) * M_LOG2E) : 0.0;
-=======
         if (p != 0.0) {
             fentropy += p * log(p) * M_LOG2E;
         }
->>>>>>> b384a8d28c0fde946cd44d0e764ce5bc72c45e1b
     }
 
     /* Finally, allocate a PyObject* for return */
